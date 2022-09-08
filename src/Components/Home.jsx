@@ -18,7 +18,7 @@ class Home extends React.Component {
 
   handleGetData = async () => {
     const { search } = this.state;
-    const response = await getProductsFromCategoryAndQuery(search);
+    const response = await getProductsFromCategoryAndQuery('', search);
     console.log('rs', response);
     this.setState({ productsApi: await response.results });
   };
@@ -54,7 +54,7 @@ class Home extends React.Component {
         </div>
         <div>
           <ul>
-            { productsApi.length !== 0 ? 'Nenhum produto foi encontrado'
+            { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
               : (
                 productsApi.map((product, index) => (
                   <li

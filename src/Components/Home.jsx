@@ -1,5 +1,6 @@
 import React from 'react';
 import { getProductsFromCategoryAndQuery } from '../services/api';
+import Category from './Category';
 
 class Home extends React.Component {
   state = {
@@ -68,7 +69,9 @@ class Home extends React.Component {
                   </li>
                 )))}
           </ul>
+          
         </div>
+       <Category />
       </div>
     );
   }

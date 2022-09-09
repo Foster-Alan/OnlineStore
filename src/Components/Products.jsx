@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { getProductsFromId } from '../services/api';
 
 class Products extends React.Component {
-  state = { product: '' };
+  state = {
+    product: '',
+    redirect: false,
+  };
 
   componentDidMount() {
     const { match } = this.props;
@@ -14,31 +17,40 @@ class Products extends React.Component {
     });
   }
 
+  handleClickButton = () => {
+    this.setState({ redirect: true });
+  };
+
   render() {
-    const { product } = this.state;
-    return (
+    const { product, redirect } = this.state;
+    const productPage = (
       <div>
-        <p data-testid="product-detail-name" />
-        { product.title }
+        <p data-testid="product-detail-name">
+          { product.title }
+        </p>
         <img
           data-testid="product-detail-image"
           src={ product.thumbnail }
           alt={ product.title }
         />
-        <p data-testid="product-detail-price" />
-        { product.price }
+        <p data-testid="product-detail-price">
+          { product.price }
+        </p>
         <div>
-          <Link
-            to="/ShoppingCart"
+          <button
+            type="submit"
+            onClick={ this.handleClickButton }
+            data-testid="shopping-cart-button"
           >
-            <button
-              type="submit"
-              data-testid="shopping-cart-button"
-            >
-              Adicionar Carrinho
-            </button>
-          </Link>
+            Adicionar Carrinho
+          </button>
         </div>
+      </div>
+    );
+    return (
+      <div>
+        {redirect && <Redirect to="/ShoppingCart" />}
+        {!redirect && productPage}
       </div>
     );
   }

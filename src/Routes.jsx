@@ -11,7 +11,7 @@ class Routes extends Component {
         <Switch>
           <Route exact path="/" component={ Home } />
           <Route exact path="/ShoppingCart" component={ ShoppingCart } />
-          <Route exact path="/Products:id" component={ Products } />
+          <Route exact path="/Products/:id" component={ Products } />
         </Switch>
       </div>
     );

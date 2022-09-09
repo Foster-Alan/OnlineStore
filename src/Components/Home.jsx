@@ -1,16 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getProductsFromCategoryAndQuery } from '../services/api';
+import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 import Category from './Category';
 
 class Home extends React.Component {
   state = {
     search: '',
     productsApi: [],
+    categorias: [],
   };
 
   componentDidMount() {
-    this.setState({ productsApi: [] });
+    getCategories().then((response) => this.setState({ categorias: response }));
   }
 
   handleSearch = ({ target }) => {
@@ -18,22 +19,16 @@ class Home extends React.Component {
     this.setState({ search: value });
   };
 
-  handleGetData = async () => {
-    const { search } = this.state;
-    const response = await getProductsFromCategoryAndQuery('', search);
-    console.log('rs', response);
-    this.setState({ productsApi: await response.results });
-  };
-
   handleCategory = async ({ target }) => {
     const { search } = this.state;
-    const { value } = await target;
+    const { value } = target;
     const response = await getProductsFromCategoryAndQuery(value, search);
-    this.setState({ productsApi: await response.results });
+    this.setState({ productsApi: response.results });
+    console.log(value, search, response);
   };
 
   render() {
-    const { search, productsApi } = this.state;
+    const { search, productsApi, categorias } = this.state;
     return (
       <div>
         <div>
@@ -50,7 +45,7 @@ class Home extends React.Component {
         <button
           type="submit"
           data-testid="query-button"
-          onClick={ this.handleGetData }
+          onClick={ this.handleCategory }
         >
           Pesquisar
         </button>
@@ -67,38 +62,34 @@ class Home extends React.Component {
           )}
         </div>
         <div>
-          <div>
-            <ul>
-              { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
-                : (
-                  <div>
-                    {productsApi.map((product, index) => (
-                      <Link
-                        key={ index }
-                        data-testid="product-detail-link"
-                        to={ `/Products${product.id}` }
-                      >
-                        <li
-                          key={ index }
-                          data-testid="product"
-                        >
-                          <p>
-                            { product.title }
-                          </p>
-                          <img src={ product.thumbnail } alt={ product.title } />
-                          <p />
-                          { product.price }
-                        </li>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-            </ul>
-          </div>
+          { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
+            : (
+              <ul>
+                {productsApi.map((product) => (
+                  <Link
+                    to={ `/Products/${product.id}` }
+                    data-testid="product-detail-link"
+                    key={ product.id }
+                  >
+                    <li
+                      data-testid="product"
+                    >
+                      <p>
+                        { product.title }
+                      </p>
+                      <img src={ product.thumbnail } alt={ product.title } />
+                      <p />
+                      { product.price }
+                    </li>
+                  </Link>
+                ))}
+              </ul>
+            )}
         </div>
         <div>
           <Category
             handleCategory={ this.handleCategory }
+            categorias={ categorias }
           />
         </div>
       </div>

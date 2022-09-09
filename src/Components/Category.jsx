@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getCategories } from '../services/api';
 
 class Category extends Component {
-  state = {
-    categorias: [],
-  };
-
-  componentDidMount() {
-    getCategories().then((response) => this.setState({ categorias: response }));
-  }
-
   render() {
-    const { categorias } = this.state;
-    const { handleCategory } = this.props;
+    const { handleCategory, categorias } = this.props;
     return (
       <div>
         {
@@ -40,6 +30,7 @@ class Category extends Component {
 
 Category.propTypes = {
   handleCategory: PropTypes.func.isRequired,
+  categorias: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Category;

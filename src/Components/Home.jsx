@@ -6,6 +6,7 @@ class Home extends React.Component {
   state = {
     search: '',
     productsApi: [],
+    // productsCart: [],
   };
 
   componentDidMount() {
@@ -31,8 +32,24 @@ class Home extends React.Component {
     this.setState({ productsApi: await response.results });
   };
 
+  addToCart = ({ target }) => {
+    const { productsCart } = this.state;
+    // productsCart.push(target.value);
+
+    this.setState({ productsCart });
+    // const localProds = localStorage.getItem('products');
+
+    if (localProds === '' || localProds === null) {
+      localStorage.setItem('products', target.value);
+    }
+
+    const prodsNew = [localProds, target.value];
+    prodsNew.join(',');
+    localStorage.setItem('products', JSON.stringify(prodsNew));
+  };
+
   render() {
-    const { search, productsApi } = this.state;
+    const { search, productsApi, productsCart } = this.state;
     return (
       <div>
         <input
@@ -73,9 +90,18 @@ class Home extends React.Component {
                     <img src={ product.thumbnail } alt={ product.title } />
                     <p />
                     { product.price }
+                    <button
+                      type="button"
+                      data-testid="product-add-to-cart"
+                      value={ product.id }
+                      onClick={ this.addToCart }
+                    >
+                      Adicionar ao Carrinho
+                    </button>
                   </li>
                 )))}
           </ul>
+          { console.log(productsCart) }
         </div>
         <div>
           <Category

@@ -2,11 +2,10 @@ import React from 'react';
 import { getProductsFromCategoryAndQuery } from '../services/api';
 import Category from './Category';
 
-class Home extends React.Component {
+export default class Home extends React.Component {
   state = {
     search: '',
     productsApi: [],
-    // productsCart: [],
   };
 
   componentDidMount() {
@@ -21,7 +20,6 @@ class Home extends React.Component {
   handleGetData = async () => {
     const { search } = this.state;
     const response = await getProductsFromCategoryAndQuery('', search);
-    console.log('rs', response);
     this.setState({ productsApi: await response.results });
   };
 
@@ -29,27 +27,18 @@ class Home extends React.Component {
     const { search } = this.state;
     const { value } = target;
     const response = await getProductsFromCategoryAndQuery(value, search);
-    this.setState({ productsApi: await response.results });
+    this.setState({ productsApi: response.results });
   };
 
   addToCart = ({ target }) => {
-    const { productsCart } = this.state;
-    // productsCart.push(target.value);
+    const localProds = JSON.parse(localStorage.getItem('products')) || [];
 
-    this.setState({ productsCart });
-    // const localProds = localStorage.getItem('products');
-
-    if (localProds === '' || localProds === null) {
-      localStorage.setItem('products', target.value);
-    }
-
-    const prodsNew = [localProds, target.value];
-    prodsNew.join(',');
+    const prodsNew = [...localProds, target.value];
     localStorage.setItem('products', JSON.stringify(prodsNew));
   };
 
   render() {
-    const { search, productsApi, productsCart } = this.state;
+    const { search, productsApi } = this.state;
     return (
       <div>
         <input
@@ -101,7 +90,6 @@ class Home extends React.Component {
                   </li>
                 )))}
           </ul>
-          { console.log(productsCart) }
         </div>
         <div>
           <Category
@@ -112,5 +100,3 @@ class Home extends React.Component {
     );
   }
 }
-
-export default Home;

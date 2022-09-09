@@ -7,16 +7,21 @@ export default class Cart extends Component {
   };
 
   componentDidMount() {
-    // const localProds = localStorage.getItem('products').slice(1);
-    const localProds = JSON.parse(localStorage.getItem('products'));
-    console.log(localProds);
-    const { cart } = this.state;
-    /*
-    localProds.split(',').forEach(async (prod) => (
-      cart.push(await getProductsFromId(prod))));
-    this.setState({ cart });
+    // const localProds = JSON.parse(localStorage.getItem('products'));
 
-    console.log('DidMount: ', cart); */
+    // const products = await Promise.all(localProds.map((prod) => (
+    //   (getProductsFromId(prod)))));
+    // this.setState({ cart: products });
+    this.getProducts();
+  }
+
+  async getProducts() {
+    const localProds = JSON.parse(localStorage.getItem('products'));
+
+    const products = await Promise.all(localProds.map((prod) => (
+      (getProductsFromId(prod)))));
+    this.setState({ cart: products });
+    console.log('oi');
   }
 
   render() {
@@ -33,9 +38,11 @@ export default class Cart extends Component {
           <ul>
             { cart.map((prod) => (
               <li key={ prod.id }>
-                <p>{ prod.title }</p>
+                <p data-testid="shopping-cart-product-name">{ prod.title }</p>
                 <img src={ prod.thumbnail } alt={ prod.title } />
-                <p />
+                <p data-testid="shopping-cart-product-quantity">
+                  { prod.available_quantity }
+                </p>
                 { prod.price }
               </li>))}
           </ul>

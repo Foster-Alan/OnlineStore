@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery } from '../services/api';
 import Category from './Category';
 
@@ -26,7 +27,7 @@ class Home extends React.Component {
 
   handleCategory = async ({ target }) => {
     const { search } = this.state;
-    const { value } = target;
+    const { value } = await target;
     const response = await getProductsFromCategoryAndQuery(value, search);
     this.setState({ productsApi: await response.results });
   };
@@ -35,6 +36,9 @@ class Home extends React.Component {
     const { search, productsApi } = this.state;
     return (
       <div>
+        <div>
+          <Link data-testid="shopping-cart-button" to="/ShoppingCart">Carrinho</Link>
+        </div>
         <input
           type="text"
           name="search"
@@ -53,29 +57,44 @@ class Home extends React.Component {
         <div>
           { productsApi.length === 0
           && (
-            <p
-              data-testid="home-initial-message"
-            >
-              Digite algum termo de pesquisa ou escolha uma categoria.
-            </p>
+            <div>
+              <p
+                data-testid="home-initial-message"
+              >
+                Digite algum termo de pesquisa ou escolha uma categoria.
+              </p>
+            </div>
           )}
         </div>
         <div>
-          <ul>
-            { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
-              : (
-                productsApi.map((product, index) => (
-                  <li
-                    key={ index }
-                    data-testid="product"
-                  >
-                    <p>{ product.title }</p>
-                    <img src={ product.thumbnail } alt={ product.title } />
-                    <p />
-                    { product.price }
-                  </li>
-                )))}
-          </ul>
+          <div>
+            <ul>
+              { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
+                : (
+                  <div>
+                    {productsApi.map((product, index) => (
+                      <Link
+                        key={ index }
+                        data-testid="product-detail-link"
+                        to={ `/Products${product.id}` }
+                      >
+                        <li
+                          key={ index }
+                          data-testid="product"
+                        >
+                          <p>
+                            { product.title }
+                          </p>
+                          <img src={ product.thumbnail } alt={ product.title } />
+                          <p />
+                          { product.price }
+                        </li>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+            </ul>
+          </div>
         </div>
         <div>
           <Category

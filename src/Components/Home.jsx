@@ -24,6 +24,13 @@ class Home extends React.Component {
     this.setState({ productsApi: await response.results });
   };
 
+  handleCategory = async ({ target }) => {
+    const { search } = this.state;
+    const { value } = target;
+    const response = await getProductsFromCategoryAndQuery(value, search);
+    this.setState({ productsApi: await response.results });
+  };
+
   render() {
     const { search, productsApi } = this.state;
     return (
@@ -44,7 +51,7 @@ class Home extends React.Component {
           Pesquisar
         </button>
         <div>
-          { search === ''
+          { productsApi.length === 0
           && (
             <p
               data-testid="home-initial-message"
@@ -70,7 +77,11 @@ class Home extends React.Component {
                 )))}
           </ul>
         </div>
-        <Category />
+        <div>
+          <Category
+            handleCategory={ this.handleCategory }
+          />
+        </div>
       </div>
     );
   }

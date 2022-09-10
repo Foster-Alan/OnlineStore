@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { getProductsFromId } from '../services/api';
 
 export default class Cart extends Component {
   state = {
@@ -16,12 +15,9 @@ export default class Cart extends Component {
   }
 
   async getProducts() {
-    const localProds = JSON.parse(localStorage.getItem('products'));
-
-    const products = await Promise.all(localProds.map((prod) => (
-      (getProductsFromId(prod)))));
-    this.setState({ cart: products });
-    console.log('oi');
+    const localProds = JSON.parse(localStorage.getItem('products')) || [];
+    const prodsObj = localProds.map((curr) => Object.fromEntries(curr));
+    this.setState({ cart: prodsObj });
   }
 
   render() {
@@ -41,10 +37,11 @@ export default class Cart extends Component {
                 <p data-testid="shopping-cart-product-name">{ prod.title }</p>
                 <img src={ prod.thumbnail } alt={ prod.title } />
                 <p data-testid="shopping-cart-product-quantity">
-                  { prod.available_quantity }
+                  1
                 </p>
                 { prod.price }
-              </li>))}
+              </li>
+            ))}
           </ul>
         )
     );

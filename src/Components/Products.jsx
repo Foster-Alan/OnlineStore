@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductsFromId } from '../services/api';
+import Form from './Form';
 
 class Products extends React.Component {
   state = {
@@ -28,17 +29,13 @@ class Products extends React.Component {
     const { product } = this.state;
     const productPage = (
       <div>
-        <p data-testid="product-detail-name">
-          { product.title }
-        </p>
+        <p data-testid="product-detail-name">{product.title}</p>
         <img
           data-testid="product-detail-image"
           src={ product.thumbnail }
           alt={ product.title }
         />
-        <p data-testid="product-detail-price">
-          { product.price }
-        </p>
+        <p data-testid="product-detail-price">{product.price}</p>
         <div>
           <div>
             <button
@@ -58,14 +55,11 @@ class Products extends React.Component {
               Carrinho
             </Link>
           </div>
+          <Form />
         </div>
       </div>
     );
-    return (
-      <div>
-        {productPage}
-      </div>
-    );
+    return <div>{productPage}</div>;
   }
 }
 

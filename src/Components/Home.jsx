@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 import Category from './Category';
 
-class Home extends React.Component {
+export default class Home extends React.Component {
   state = {
     search: '',
     productsApi: [],
@@ -24,7 +24,14 @@ class Home extends React.Component {
     const { value } = target;
     const response = await getProductsFromCategoryAndQuery(value, search);
     this.setState({ productsApi: response.results });
-    console.log(value, search, response);
+  };
+
+  addToCart = ({ target: { value } }) => {
+    const { productsApi } = this.state;
+    const produToAdd = Object.entries(productsApi.filter(({ id }) => id === value)[0]);
+    const localProds = JSON.parse(localStorage.getItem('products')) || [];
+    const prodsNew = [...localProds, produToAdd];
+    localStorage.setItem('products', JSON.stringify(prodsNew));
   };
 
   render() {
@@ -32,23 +39,26 @@ class Home extends React.Component {
     return (
       <div>
         <div>
-          <Link data-testid="shopping-cart-button" to="/ShoppingCart">Carrinho</Link>
+          <div>
+            <Link data-testid="shopping-cart-button" to="/ShoppingCart">Carrinho</Link>
+          </div>
+          <input
+            type="text"
+            name="search"
+            placeholder="Search"
+            data-testid="query-input"
+            search={ search }
+            onChange={ this.handleSearch }
+          />
+          <button
+            type="submit"
+            data-testid="query-button"
+            onClick={ this.handleCategory }
+          >
+            Pesquisar
+          </button>
         </div>
-        <input
-          type="text"
-          name="search"
-          placeholder="Search"
-          data-testid="query-input"
-          search={ search }
-          onChange={ this.handleSearch }
-        />
-        <button
-          type="submit"
-          data-testid="query-button"
-          onClick={ this.handleCategory }
-        >
-          Pesquisar
-        </button>
+
         <div>
           { productsApi.length === 0
           && (
@@ -61,31 +71,42 @@ class Home extends React.Component {
             </div>
           )}
         </div>
-        <div>
-          { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
-            : (
-              <ul>
-                {productsApi.map((product) => (
+
+        { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
+          : (
+            <ul>
+              {productsApi.map((product) => (
+                <li
+                  data-testid="product"
+                  key={ product.id }
+                >
                   <Link
                     to={ `/Products/${product.id}` }
                     data-testid="product-detail-link"
-                    key={ product.id }
+
                   >
-                    <li
-                      data-testid="product"
-                    >
-                      <p>
-                        { product.title }
-                      </p>
-                      <img src={ product.thumbnail } alt={ product.title } />
-                      <p />
+                    <p>
+                      { product.title }
+                    </p>
+                    <img src={ product.thumbnail } alt={ product.title } />
+                    <p />
+                    <p>
                       { product.price }
-                    </li>
+                    </p>
                   </Link>
-                ))}
-              </ul>
-            )}
-        </div>
+                  <button
+                    type="button"
+                    data-testid="product-add-to-cart"
+                    value={ product.id }
+                    onClick={ this.addToCart }
+                  >
+                    Adicionar ao Carrinho
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
         <div>
           <Category
             handleCategory={ this.handleCategory }
@@ -96,5 +117,3 @@ class Home extends React.Component {
     );
   }
 }
-
-export default Home;

@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getProductsFromId } from '../services/api';
 
 class Products extends React.Component {
   state = {
     product: '',
-    redirect: false,
   };
 
   componentDidMount() {
@@ -18,11 +17,15 @@ class Products extends React.Component {
   }
 
   handleClickButton = () => {
-    this.setState({ redirect: true });
+    const { product } = this.state;
+    const localProds = JSON.parse(localStorage.getItem('products')) || [];
+    const produToAdd = Object.entries(product);
+    const prodsNew = [...localProds, produToAdd];
+    localStorage.setItem('products', JSON.stringify(prodsNew));
   };
 
   render() {
-    const { product, redirect } = this.state;
+    const { product } = this.state;
     const productPage = (
       <div>
         <p data-testid="product-detail-name">
@@ -37,20 +40,30 @@ class Products extends React.Component {
           { product.price }
         </p>
         <div>
-          <button
-            type="submit"
-            onClick={ this.handleClickButton }
-            data-testid="shopping-cart-button"
-          >
-            Adicionar Carrinho
-          </button>
+          <div>
+            <button
+              type="submit"
+              onClick={ this.handleClickButton }
+              data-testid="product-detail-add-to-cart"
+            >
+              Adicionar Carrinho
+            </button>
+          </div>
+          <div>
+            <Link
+              type="submit"
+              data-testid="shopping-cart-button"
+              to="/ShoppingCart"
+            >
+              Carrinho
+            </Link>
+          </div>
         </div>
       </div>
     );
     return (
       <div>
-        {redirect && <Redirect to="/ShoppingCart" />}
-        {!redirect && productPage}
+        {productPage}
       </div>
     );
   }

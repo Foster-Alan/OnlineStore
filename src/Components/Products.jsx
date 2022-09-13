@@ -8,13 +8,14 @@ import Form from './Form';
 class Products extends React.Component {
   state = {
     product: '',
+    shipping: false,
   };
 
   componentDidMount() {
     const { match } = this.props;
     const { id } = match.params;
     getProductsFromId(id).then((response) => {
-      this.setState({ product: response });
+      this.setState({ product: response, shipping: response.shipping.free_shipping });
     });
   }
 
@@ -29,9 +30,12 @@ class Products extends React.Component {
   };
 
   render() {
-    const { product } = this.state;
+    const { product, shipping } = this.state;
     const productPage = (
       <div>
+        <div>
+          {shipping && (<p data-testid="free-shipping">Frete grátis</p>)}
+        </div>
         <p data-testid="product-detail-name">{product.title}</p>
         <img
           data-testid="product-detail-image"

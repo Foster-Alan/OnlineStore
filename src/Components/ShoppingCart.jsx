@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class Cart extends Component {
   state = {
@@ -52,44 +53,52 @@ export default class Cart extends Component {
         </div>
       )
         : (
-          <ul>
-            { cart.map((prod) => (
-              <li key={ prod.id }>
-                <p data-testid="shopping-cart-product-name">{ prod.title }</p>
-                <img src={ prod.thumbnail } alt={ prod.title } />
-                <button
-                  type="button"
-                  name={ `menos-${prod.id}` }
-                  data-testid="product-decrease-quantity"
-                  onClick={ this.handleQnt }
-                >
-                  -
-                </button>
-                <p data-testid="shopping-cart-product-quantity">
-                  { localStorage.getItem(`qnt${prod.id}`) }
-                </p>
-                <button
-                  type="button"
-                  name={ `mais-${prod.id}` }
-                  data-testid="product-increase-quantity"
-                  onClick={ this.handleQnt }
-                >
-                  +
-                </button>
-                <p>
-                  { prod.price }
-                </p>
-                <button
-                  type="button"
-                  data-testid="remove-product"
-                  value={ prod.id }
-                  onClick={ this.handleRemove }
-                >
-                  Remover
-                </button>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <ul>
+              { cart.map((prod) => (
+                <li key={ prod.id }>
+                  <p data-testid="shopping-cart-product-name">{ prod.title }</p>
+                  <img src={ prod.thumbnail } alt={ prod.title } />
+                  <button
+                    type="button"
+                    name={ `menos-${prod.id}` }
+                    data-testid="product-decrease-quantity"
+                    onClick={ this.handleQnt }
+                  >
+                    -
+                  </button>
+                  <p data-testid="shopping-cart-product-quantity">
+                    { localStorage.getItem(`qnt${prod.id}`) }
+                  </p>
+                  <button
+                    type="button"
+                    name={ `mais-${prod.id}` }
+                    data-testid="product-increase-quantity"
+                    onClick={ this.handleQnt }
+                  >
+                    +
+                  </button>
+                  <p>
+                    { prod.price }
+                  </p>
+                  <button
+                    type="button"
+                    data-testid="remove-product"
+                    value={ prod.id }
+                    onClick={ this.handleRemove }
+                  >
+                    Remover
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <Link
+              data-testid="checkout-products"
+              to="/Checkout"
+            >
+              Finalizar Compras
+            </Link>
+          </div>
         )
     );
   }

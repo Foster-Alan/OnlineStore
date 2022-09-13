@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import qtdAll from '../services/qtdPlus';
 
 export default class Cart extends Component {
   state = {
@@ -19,13 +20,24 @@ export default class Cart extends Component {
     this.setState({ cart: prodsObj });
   }
 
+  handleQntMinus = () => {
+    const { cart } = this.state;
+    const qtd = cart.length;
+    const localQtd = Number(localStorage.getItem('qtdAll'));
+    const sub = localQtd - 1;
+    const verify = sub < qtd ? qtd : sub;
+    localStorage.setItem('qtdAll', verify);
+  };
+
   handleQnt = ({ target: { name } }) => {
     const valorUm = 1;
     const id = name.split('-');
     if (name.includes('mais')) {
+      qtdAll();
       const soma = (Number(localStorage.getItem(`qnt${id[1]}`)) + valorUm);
       localStorage.setItem(`qnt${id[1]}`, soma);
     } else {
+      this.handleQntMinus();
       const soma = (Number(localStorage.getItem(`qnt${id[1]}`)) - valorUm);
       const result = soma < 1 ? 1 : soma;
       localStorage.setItem(`qnt${id[1]}`, result);

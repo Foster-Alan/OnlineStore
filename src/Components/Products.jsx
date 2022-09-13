@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import qtdAll from '../services/qtdPlus';
 import { getProductsFromId } from '../services/api';
 import Form from './Form';
 
@@ -23,6 +24,8 @@ class Products extends React.Component {
     const produToAdd = Object.entries(product);
     const prodsNew = [...localProds, produToAdd];
     localStorage.setItem('products', JSON.stringify(prodsNew));
+    qtdAll();
+    this.forceUpdate();
   };
 
   render() {
@@ -54,6 +57,7 @@ class Products extends React.Component {
             >
               Carrinho
             </Link>
+            <p data-testid="shopping-cart-size">{localStorage.getItem('qtdAll')}</p>
           </div>
           <Form
             prodId={ product.id }

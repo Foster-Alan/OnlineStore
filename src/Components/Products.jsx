@@ -55,7 +55,9 @@ class Products extends React.Component {
               Carrinho
             </Link>
           </div>
-          <Form />
+          <Form
+            prodId={ product.id }
+          />
         </div>
       </div>
     );

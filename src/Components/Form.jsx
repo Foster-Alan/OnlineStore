@@ -1,35 +1,82 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Form extends React.Component {
   state = {
     email: '',
     avaliation: '',
     message: '',
-    form: false,
+    avaliaçoes: [],
+    invalid: false,
+    check1: false,
+    check2: false,
+    check3: false,
+    check4: false,
+    check5: false,
   };
 
+  componentDidUpdate(prevProps) {
+    const { prodId } = this.props;
+    if (prevProps.prodId !== prodId) {
+      this.getAvaliation();
+    }
+  }
+
+  getAvaliation = () => {
+    const { prodId } = this.props;
+    const id = JSON.parse(localStorage.getItem(prodId)) || [];
+    this.setState({ avaliaçoes: id });
+  };
+
+  // LOGICA DO REGEX RETIRADO DO POST NO SITE STACKOVERFLOW 'https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript'//
   handleInput = ({ target }) => {
+    this.setState({ invalid: false });
     const { name, value } = target;
     this.setState({ [name]: value });
   };
 
-  validation = (e) => {
-    e.preventDefault();
-    const { email, avaliation, message } = this.state;
+  validation = () => {
     const regex = /\S+@\S+\.\S+/;
-    if (!regex.test(email)) {
-      this.setState({ form: true });
-    }
+    const { email, avaliation } = this.state;
+    return (!regex.test(email)
+    || (email === '') || (avaliation === ''));
+  };
 
-    if ((email === '') || (avaliation === '') || (message === '')) {
-      this.setState({ form: true });
+  handleCheck = ({ target: { id, value, name } }) => {
+    this.setState({ invalid: false });
+    this.setState({ [name]: value, [id]: true });
+  };
+
+  handleButton = ({ target: { value } }) => {
+    const { email, avaliation, message } = this.state;
+    const invalidInputs = this.validation();
+    if (invalidInputs) {
+      this.setState({ invalid: true });
     } else {
-      this.setState({ email: '', avaliation: '', message: '', form: false });
+      this.setState({ invalid: false });
+      const reviews = JSON.parse(localStorage.getItem(value)) || [];
+      const avalObj = Object.fromEntries([
+        ['email', email],
+        ['text', message],
+        ['rating', avaliation]]);
+      localStorage.setItem([value], JSON.stringify([...reviews, avalObj]));
+      this.setState({ email: '',
+        avaliation: '',
+        message: '',
+        check1: false,
+        check2: false,
+        check3: false,
+        check4: false,
+        check5: false });
     }
+    const tmp = JSON.parse(localStorage.getItem(value)) || [];
+    this.setState({ avaliaçoes: tmp });
   };
 
   render() {
-    const { email, message, form } = this.state;
+    const { email, message, invalid, avaliaçoes, check1, check2,
+      check3, check4, check5 } = this.state;
+    const { prodId } = this.props;
     return (
       <div>
         <form>
@@ -39,7 +86,7 @@ class Form extends React.Component {
             placeholder="Email"
             data-testid="product-detail-email"
             value={ email }
-            onChange={ this.handleInput }
+            onChange={ this.handleCheck }
             required
           />
           <div>
@@ -49,8 +96,10 @@ class Form extends React.Component {
                 type="radio"
                 name="avaliation"
                 data-testid="1-rating"
+                id="check1"
                 value={ 1 }
-                onClick={ this.handleInput }
+                onChange={ this.handleCheck }
+                checked={ check1 }
               />
             </label>
             <label htmlFor="avaliation">
@@ -60,7 +109,9 @@ class Form extends React.Component {
                 name="avaliation"
                 data-testid="2-rating"
                 value={ 2 }
-                onClick={ this.handleInput }
+                id="check2"
+                onChange={ this.handleCheck }
+                checked={ check2 }
               />
             </label>
             <label htmlFor="avaliation">
@@ -70,7 +121,9 @@ class Form extends React.Component {
                 name="avaliation"
                 data-testid="3-rating"
                 value={ 3 }
-                onClick={ this.handleInput }
+                id="check3"
+                onChange={ this.handleCheck }
+                checked={ check3 }
               />
             </label>
             <label htmlFor="avaliation">
@@ -80,7 +133,9 @@ class Form extends React.Component {
                 name="avaliation"
                 data-testid="4-rating"
                 value={ 4 }
-                onClick={ this.handleInput }
+                id="check4"
+                onChange={ this.handleCheck }
+                checked={ check4 }
               />
             </label>
             <label htmlFor="avaliation">
@@ -90,7 +145,9 @@ class Form extends React.Component {
                 name="avaliation"
                 data-testid="5-rating"
                 value={ 5 }
-                onClick={ this.handleInput }
+                id="check5"
+                onChange={ this.handleCheck }
+                checked={ check5 }
               />
             </label>
           </div>
@@ -104,19 +161,45 @@ class Form extends React.Component {
             onChange={ this.handleInput }
           />
           <button
-            type="submit"
+            type="button"
             data-testid="submit-review-btn"
-            onClick={ this.validation }
+            value={ prodId }
+            onClick={ this.handleButton }
           >
             Avaliar
           </button>
         </form>
         <div>
-          { form && <p data-testid="error-msg">Campos inválidos</p>}
+          { invalid && <p data-testid="error-msg">Campos inválidos</p>}
+        </div>
+        <div>
+          <ul>
+            {
+              avaliaçoes.map(({ email: userEmail, text, rating }, index) => (
+                <li key={ index }>
+                  <h3 data-testid="review-card-email">
+                    {userEmail}
+                  </h3>
+                  <p data-testid="review-card-rating">
+                    {rating}
+                  </p>
+                  <p data-testid="review-card-evaluation">
+                    {text}
+                  </p>
+                </li>))
+            }
+          </ul>
         </div>
       </div>
     );
   }
 }
+
+Form.propTypes = {
+  prodId: PropTypes.string,
+};
+Form.defaultProps = {
+  prodId: undefined,
+};
 
 export default Form;

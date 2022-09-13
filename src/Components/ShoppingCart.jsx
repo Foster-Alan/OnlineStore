@@ -30,12 +30,16 @@ export default class Cart extends Component {
   };
 
   handleQnt = ({ target: { name } }) => {
+    const { cart } = this.state;
     const valorUm = 1;
     const id = name.split('-');
     if (name.includes('mais')) {
       qtdAll();
       const soma = (Number(localStorage.getItem(`qnt${id[1]}`)) + valorUm);
-      localStorage.setItem(`qnt${id[1]}`, soma);
+      const valueMax = cart.filter((e) => e.id === id[1]);
+      const verifyValueMax = soma > valueMax[0].available_quantity
+        ? valueMax[0].available_quantity : soma;
+      localStorage.setItem(`qnt${id[1]}`, verifyValueMax);
     } else {
       this.handleQntMinus();
       const soma = (Number(localStorage.getItem(`qnt${id[1]}`)) - valorUm);

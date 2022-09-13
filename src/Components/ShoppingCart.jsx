@@ -13,7 +13,7 @@ export default class Cart extends Component {
     const localProds = JSON.parse(localStorage.getItem('products')) || [];
     const prodsObj = localProds.map((curr) => Object.fromEntries(curr));
     prodsObj.forEach(({ id }) => {
-      localStorage.setItem(id, '1');
+      localStorage.setItem(`qnt${id}`, '1');
     });
     this.setState({ cart: prodsObj });
   }
@@ -22,12 +22,12 @@ export default class Cart extends Component {
     const valorUm = 1;
     const id = name.split('-');
     if (name.includes('mais')) {
-      const soma = (Number(localStorage.getItem(id[1])) + valorUm);
-      localStorage.setItem(id[1], soma);
+      const soma = (Number(localStorage.getItem(`qnt${id[1]}`)) + valorUm);
+      localStorage.setItem(`qnt${id[1]}`, soma);
     } else {
-      const soma = (Number(localStorage.getItem(id[1])) - valorUm);
+      const soma = (Number(localStorage.getItem(`qnt${id[1]}`)) - valorUm);
       const result = soma < 1 ? 1 : soma;
-      localStorage.setItem(id[1], result);
+      localStorage.setItem(`qnt${id[1]}`, result);
     }
     this.forceUpdate();
   };
@@ -66,7 +66,7 @@ export default class Cart extends Component {
                   -
                 </button>
                 <p data-testid="shopping-cart-product-quantity">
-                  { localStorage.getItem(prod.id) }
+                  { localStorage.getItem(`qnt${prod.id}`) }
                 </p>
                 <button
                   type="button"

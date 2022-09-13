@@ -84,6 +84,10 @@ export default class Home extends React.Component {
                   data-testid="product"
                   key={ product.id }
                 >
+                  <div>
+                    {product.shipping.free_shipping
+                    && (<p data-testid="free-shipping">Frete grátis</p>)}
+                  </div>
                   <Link
                     to={ `/Products/${product.id}` }
                     data-testid="product-detail-link"

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import qtdAll from '../services/qtdPlus';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 import Category from './Category';
 
@@ -32,6 +33,8 @@ export default class Home extends React.Component {
     const localProds = JSON.parse(localStorage.getItem('products')) || [];
     const prodsNew = [...localProds, produToAdd];
     localStorage.setItem('products', JSON.stringify(prodsNew));
+    qtdAll();
+    this.forceUpdate();
   };
 
   render() {
@@ -41,6 +44,7 @@ export default class Home extends React.Component {
         <div>
           <div>
             <Link data-testid="shopping-cart-button" to="/ShoppingCart">Carrinho</Link>
+            <p data-testid="shopping-cart-size">{localStorage.getItem('qtdAll')}</p>
           </div>
           <input
             type="text"

@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BsCart4 } from 'react-icons/bs';
 import qtdAll from '../services/qtdPlus';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 import Category from './Category';
+import '../Styles/Home.css';
+import '../Styles/Products.css';
 
 export default class Home extends React.Component {
   state = {
@@ -42,25 +45,36 @@ export default class Home extends React.Component {
     return (
       <div>
         <div>
-          <div>
-            <Link data-testid="shopping-cart-button" to="/ShoppingCart">Carrinho</Link>
+          <div className="cart">
+            <Link data-testid="shopping-cart-button" to="/ShoppingCart">
+              <BsCart4 />
+            </Link>
             <p data-testid="shopping-cart-size">{localStorage.getItem('qtdAll')}</p>
           </div>
-          <input
-            type="text"
-            name="search"
-            placeholder="Search"
-            data-testid="query-input"
-            search={ search }
-            onChange={ this.handleSearch }
-          />
-          <button
-            type="submit"
-            data-testid="query-button"
-            onClick={ this.handleCategory }
-          >
-            Pesquisar
-          </button>
+          <div>
+            <Category
+              handleCategory={ this.handleCategory }
+              categorias={ categorias }
+            />
+
+          </div>
+          <div className="search">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search"
+              data-testid="query-input"
+              search={ search }
+              onChange={ this.handleSearch }
+            />
+            <button
+              type="submit"
+              data-testid="query-button"
+              onClick={ this.handleCategory }
+            >
+              Pesquisar
+            </button>
+          </div>
         </div>
 
         <div>
@@ -78,7 +92,7 @@ export default class Home extends React.Component {
 
         { productsApi.length === 0 ? 'Nenhum produto foi encontrado'
           : (
-            <ul>
+            <ul className="Content-products">
               {productsApi.map((product) => (
                 <li
                   data-testid="product"
@@ -114,13 +128,6 @@ export default class Home extends React.Component {
               ))}
             </ul>
           )}
-
-        <div>
-          <Category
-            handleCategory={ this.handleCategory }
-            categorias={ categorias }
-          />
-        </div>
       </div>
     );
   }

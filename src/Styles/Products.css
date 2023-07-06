@@ -1,0 +1,34 @@
+.Content-products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.Content-products li {
+    border: 1px solid rgb(24, 23, 23);
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    align-items: center;
+    justify-content: space-between;
+    /* align-content: center; */
+}
+
+.Content-products img {
+    width: 7rem;
+
+}
+
+.quanty {
+    width: 5rem;
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.quanty button {
+    width: 1.5rem;
+    height: 1.5rem;
+}

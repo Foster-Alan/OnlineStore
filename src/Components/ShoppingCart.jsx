@@ -63,37 +63,40 @@ export default class Cart extends Component {
     return (
       cart.length === 0 ? (
         <div>
-          <p data-testid="shopping-cart-empty-message">
+          <h1 data-testid="shopping-cart-empty-message">
             Seu carrinho está vazio
-          </p>
+          </h1>
         </div>
       )
         : (
           <div>
-            <ul>
+            <h1>Meu carrinho</h1>
+            <ul className="Content-products">
               { cart.map((prod) => (
                 <li key={ prod.id }>
                   <p data-testid="shopping-cart-product-name">{ prod.title }</p>
                   <img src={ prod.thumbnail } alt={ prod.title } />
-                  <button
-                    type="button"
-                    name={ `menos-${prod.id}` }
-                    data-testid="product-decrease-quantity"
-                    onClick={ this.handleQnt }
-                  >
-                    -
-                  </button>
-                  <p data-testid="shopping-cart-product-quantity">
-                    { localStorage.getItem(`qnt${prod.id}`) }
-                  </p>
-                  <button
-                    type="button"
-                    name={ `mais-${prod.id}` }
-                    data-testid="product-increase-quantity"
-                    onClick={ this.handleQnt }
-                  >
-                    +
-                  </button>
+                  <div className="quanty">
+                    <button
+                      type="button"
+                      name={ `menos-${prod.id}` }
+                      data-testid="product-decrease-quantity"
+                      onClick={ this.handleQnt }
+                    >
+                      -
+                    </button>
+                    <p data-testid="shopping-cart-product-quantity">
+                      { localStorage.getItem(`qnt${prod.id}`) }
+                    </p>
+                    <button
+                      type="button"
+                      name={ `mais-${prod.id}` }
+                      data-testid="product-increase-quantity"
+                      onClick={ this.handleQnt }
+                    >
+                      +
+                    </button>
+                  </div>
                   <p>
                     { prod.price }
                   </p>

@@ -51,6 +51,7 @@ export default class Home extends React.Component {
             </Link>
             <p data-testid="shopping-cart-size">{localStorage.getItem('qtdAll')}</p>
           </div>
+          <h1>Online Storage</h1>
           <div>
             <Category
               handleCategory={ this.handleCategory }
@@ -62,7 +63,7 @@ export default class Home extends React.Component {
             <input
               type="text"
               name="search"
-              placeholder="Search"
+              placeholder="Pesquisar"
               data-testid="query-input"
               search={ search }
               onChange={ this.handleSearch }

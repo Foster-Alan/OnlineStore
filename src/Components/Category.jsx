@@ -7,26 +7,20 @@ class Category extends Component {
     const { handleCategory, categorias } = this.props;
     return (
       <div>
-        <h2>Categorias</h2>
-        <div className="category">
-          {
-            categorias.map(({ id, name }) => (
-              <label
-                htmlFor={ name }
-                key={ id }
-                data-testid="category"
-              >
-                <input
-                  type="radio"
-                  id={ name }
-                  value={ id }
-                  name="category"
-                  onClick={ handleCategory }
-                />
-                { name }
-              </label>))
-          }
-        </div>
+        <select
+          onChange={ handleCategory }
+          data-testid="category"
+        >
+          <option value="">Escolha uma categoria</option>
+          {categorias.map(({ id, name }) => (
+            <option
+              key={ id }
+              value={ id }
+            >
+              {name}
+            </option>
+          ))}
+        </select>
       </div>
     );
   }

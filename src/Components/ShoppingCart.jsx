@@ -56,6 +56,9 @@ export default class Cart extends Component {
     console.log(removedItemArray);
     localStorage.setItem('products', JSON.stringify(removedItemArray));
     this.setState({ cart: removedItem });
+    const localQtd = Number(localStorage.getItem('qtdAll'));
+    const soma = localQtd - 1;
+    localStorage.setItem('qtdAll', soma);
   };
 
   render() {
@@ -66,11 +69,17 @@ export default class Cart extends Component {
           <h1 data-testid="shopping-cart-empty-message">
             Seu carrinho está vazio
           </h1>
+          <Link data-testid="shopping-cart-button" to="/">
+            Pagina principal
+          </Link>
         </div>
       )
         : (
           <div>
             <h1>Meu carrinho</h1>
+            <Link data-testid="shopping-cart-button" to="/">
+              Pagina principal
+            </Link>
             <ul className="Content-products">
               { cart.map((prod) => (
                 <li key={ prod.id }>

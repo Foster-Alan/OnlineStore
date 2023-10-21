@@ -66,9 +66,9 @@ export default class Cart extends Component {
     return (
       cart.length === 0 ? (
         <div>
-          <h1 data-testid="shopping-cart-empty-message">
+          <h2 data-testid="shopping-cart-empty-message">
             Seu carrinho está vazio
-          </h1>
+          </h2>
           <Link data-testid="shopping-cart-button" to="/">
             Pagina principal
           </Link>
@@ -76,7 +76,7 @@ export default class Cart extends Component {
       )
         : (
           <div>
-            <h1>Meu carrinho</h1>
+            <h2>Meu carrinho</h2>
             <Link data-testid="shopping-cart-button" to="/">
               Pagina principal
             </Link>

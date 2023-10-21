@@ -38,6 +38,8 @@ export default class Home extends React.Component {
     localStorage.setItem('products', JSON.stringify(prodsNew));
     qtdAll();
     this.forceUpdate();
+    // eslint-disable-next-line no-alert
+    alert('Adicionado ao seu carrinho');
   };
 
   render() {
@@ -51,7 +53,7 @@ export default class Home extends React.Component {
             </Link>
             <p data-testid="shopping-cart-size">{localStorage.getItem('qtdAll')}</p>
           </div>
-          <h1>Online Storage</h1>
+          <h1>Foster Shop</h1>
           <div>
             <Category
               handleCategory={ this.handleCategory }
@@ -101,7 +103,7 @@ export default class Home extends React.Component {
                 >
                   <div>
                     {product.shipping.free_shipping
-                    && (<p data-testid="free-shipping">Frete grátis</p>)}
+                    && (<p className="frete">Frete grátis</p>)}
                   </div>
                   <Link
                     to={ `/Products/${product.id}` }
@@ -113,8 +115,9 @@ export default class Home extends React.Component {
                     </p>
                     <img src={ product.thumbnail } alt={ product.title } />
                     <p />
-                    <p>
+                    <p className="price">
                       { product.price }
+                      R$
                     </p>
                   </Link>
                   <button
